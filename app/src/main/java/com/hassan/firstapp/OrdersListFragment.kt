@@ -1,5 +1,6 @@
 package com.hassan.firstapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,12 +25,17 @@ class OrdersListFragment : Fragment() {
             Order(4, "Mohammed", 200.0, "mouse", 15)
         )
 
-
-        ordersRecycleView.adapter = OrdersRecycleAdapter(requireContext(), orders)
+        val adapter = OrdersRecycleAdapter(requireContext(), orders)
+        adapter.setOnOrderClickListener(object: OrdersRecycleAdapter.OnOrderClickListener {
+            override fun onOrderClicked(order: Order) {
+                val intent = Intent(requireContext(),OrderDetailsActivity::class.java)
+                intent.putExtra("order", order)
+                startActivity(intent)
+            }
+        })
+        ordersRecycleView.adapter = adapter
         ordersRecycleView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         ordersRecycleView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-
-
     }
 
 }

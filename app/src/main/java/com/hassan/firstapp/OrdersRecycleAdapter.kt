@@ -12,7 +12,11 @@ class OrdersRecycleAdapter(private val context: Context, private val orders: Lis
     RecyclerView.Adapter<OrdersRecycleAdapter.OrderViewHolder>() {
 
 
+    private var listener: OnOrderClickListener? = null
 
+    fun setOnOrderClickListener(listener: OnOrderClickListener){
+        this.listener = listener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         val view = LayoutInflater.from(context)
@@ -21,10 +25,6 @@ class OrdersRecycleAdapter(private val context: Context, private val orders: Lis
     }
 
     override fun getItemCount(): Int = orders.size
-
-
-
-
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
         val order = orders[position]
@@ -43,9 +43,9 @@ class OrdersRecycleAdapter(private val context: Context, private val orders: Lis
                 )
             )
         }
+
+        holder.itemView.setOnClickListener { listener?.onOrderClicked(order) }
     }
-
-
 
     class OrderViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val orderIdTextView = v.findViewById<TextView>(
@@ -63,5 +63,9 @@ class OrdersRecycleAdapter(private val context: Context, private val orders: Lis
         val priceTextView = v.findViewById<TextView>(
             R.id.priceTextView
         )
+    }
+
+    interface OnOrderClickListener{
+        fun onOrderClicked(order: Order)
     }
 }
